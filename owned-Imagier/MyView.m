@@ -12,6 +12,7 @@
 
 @interface MyView ()
 @property (nonatomic, weak) ViewModel *viewModel;
+@property (nonatomic, strong) MASConstraint *imageLabelCenterConstraint;
 @end
 
 @implementation MyView
@@ -70,15 +71,15 @@
     self.vSlider.maximumValue = kMaxZoom;
     [self addSubview:self.vSlider];
     
+    [self setupConstraints];
+    
     return self;
 }
 
 #pragma mark -
 
-- (void)updateConstraints
+- (void)setupConstraints
 {
-    NSLog(@"updateConstraints");
-    
     UIView *superview = self;
     
     // Config
@@ -87,7 +88,6 @@
     NSNumber *sliderHeight = @29;
     NSNumber *labelHeight = @21;
     CGFloat labelOffset = 20;
-    
     
     [self.imageStepper mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(superview).with.offset(padding.top);
@@ -131,10 +131,20 @@
         make.right.equalTo(superview).with.offset(-padding.right);
         make.height.equalTo(sliderHeight);
     }];
+}
+
+- (void)updateConstraints
+{
+    if (self.bounds.size.width >= 480) {
+        [self.imageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            self.imageLabelCenterConstraint = make.centerX.equalTo(self);
+        }];
+    } else if (self.imageLabelCenterConstraint) {
+        [self.imageLabelCenterConstraint uninstall];
+        self.imageLabelCenterConstraint = nil;
+    }
     
     [super updateConstraints];
 }
-
-#pragma mark -
 
 @end
