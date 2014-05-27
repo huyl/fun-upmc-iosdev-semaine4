@@ -7,15 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ImageViewModel.h"
 
-@interface MyViewModel : NSObject
+@interface ViewModel : NSObject
 
-@property (nonatomic, retain) UIImage *image;
+@property (nonatomic) int currentImageIndex;
+@property (nonatomic, weak) ImageViewModel *currentImageViewModel;
+@property (nonatomic, readonly) NSUInteger imageCount;
 
 @property (nonatomic) CGFloat hZoom;
 @property (nonatomic) CGFloat vZoom;
 @property (nonatomic) float hStretch;
 @property (nonatomic) float vStretch;
-
 
 @end

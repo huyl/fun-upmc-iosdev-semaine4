@@ -11,17 +11,21 @@
 #import "Masonry.h"
 
 @interface MyView ()
-@property (nonatomic, weak) MyViewModel *viewModel;
+@property (nonatomic, weak) ViewModel *viewModel;
 @end
 
 @implementation MyView
 
 #pragma mark - Lifecycle
 
-- (id)initWithFrame:(CGRect)frame andViewModel:(MyViewModel*)viewModel
+- (id)initWithFrame:(CGRect)frame andViewModel:(ViewModel*)viewModel
 {
     self = [self initWithFrame:frame];
-    if (self == nil) return nil;
+    if (!self) {
+        return nil;
+    }
+    
+    self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"fond-1024x1024.jpg"]];
     
     self.viewModel = viewModel;
     
@@ -36,14 +40,11 @@
     self.imageLabel.textAlignment = NSTextAlignmentCenter;
     [self addSubview:self.imageLabel];
     
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:self.viewModel.image];
+    UIImageView *imageView = [[UIImageView alloc] init];
     self.imageView = imageView;
-    self.imageView.backgroundColor = [UIColor blackColor];
-    NSLog(@"Original ImageView frame: %@", NSStringFromCGRect(self.imageView.frame));
     
     MyScrollView *scrollView = [[MyScrollView alloc] initWithImageView:self.imageView andViewModel:self.viewModel];
     self.scrollView = scrollView;
-    self.scrollView.backgroundColor = [UIColor darkGrayColor];
     [self addSubview:self.scrollView];
     [self.scrollView addSubview:self.imageView];
     
@@ -54,8 +55,8 @@
     
     UISlider *hSlider = [[UISlider alloc] init];
     self.hSlider = hSlider;
-    self.hSlider.minimumValue = MIN_ZOOM;
-    self.hSlider.maximumValue = MAX_ZOOM;
+    self.hSlider.minimumValue = kMinZoom;
+    self.hSlider.maximumValue = kMaxZoom;
     [self addSubview:self.hSlider];
 
     UILabel *vLabel = [[UILabel alloc] init];
@@ -65,13 +66,9 @@
     
     UISlider *vSlider = [[UISlider alloc] init];
     self.vSlider = vSlider;
-    self.vSlider.minimumValue = MIN_ZOOM;
-    self.vSlider.maximumValue = MAX_ZOOM;
+    self.vSlider.minimumValue = kMinZoom;
+    self.vSlider.maximumValue = kMaxZoom;
     [self addSubview:self.vSlider];
-    
-    
-    [self resetToDefaults];
-    
     
     return self;
 }
@@ -136,14 +133,6 @@
     }];
     
     [super updateConstraints];
-}
-
-- (void)resetToDefaults
-{
-    self.viewModel.hZoom = 1.0;
-    self.viewModel.vZoom = 1.0;
-    self.viewModel.hStretch = 1.0;
-    self.viewModel.vStretch = 1.0;
 }
 
 #pragma mark -

@@ -5,57 +5,60 @@
 //  Created by Huy on 5/25/14.
 //  Copyright (c) 2014 huy. All rights reserved.
 //
-// MAX_ZOOM = 4.0
-// MIN_ZOOM = 0.25
-//
-// This is what should be set on the sliders and displayed on the labels:
-// hZoom = zoomScale * hStretch
-// MIN_ZOOM <= min(hZoom, vZoom)
-// max(hZoom, vZoom) <= MAX_ZOOM
-//
-// MIN_ZOOM <= min(zoomScale * hStretch, zoomScale * vStretch)
-// MIN_ZOOM <= zoomScale * hStretch
-// MIN_ZOOM <= zoomScale * vStretch
-// MIN_ZOOM/hStretch <= zoomScale
-// MIN_ZOOM/vStretch <= zoomScale
-// MAX(MIN_ZOOM/hStretch, MIN_ZOOM/vStretch) <= zoomScale
-// same with MAX_ZOOM
 
 #import "MyScrollView.h"
 #import <objc/objc-runtime.h>
 
+const CGFloat kMaxZoom = 4.0;
+const CGFloat kMinZoom = 0.25;
+
 @interface MyScrollView()<UIScrollViewDelegate>
 @property (nonatomic) BOOL initialized;
 @property (nonatomic, weak) UIImageView* imageView;
-@property (nonatomic, weak) MyViewModel* viewModel;
+@property (nonatomic, weak) ViewModel* viewModel;
 @property (nonatomic) float initialScale;
 @end
 
 
 @implementation MyScrollView
 
-- (id)initWithImageView:(UIImageView*)imageView andViewModel:(MyViewModel*)viewModel
+- (id)initWithImageView:(UIImageView*)imageView andViewModel:(ViewModel*)viewModel
 {
     self = [self init];
     if (self) {
         self.imageView = imageView;
         self.viewModel = viewModel;
         self.initialized = NO;
-        self.minimumZoomScale = MIN_ZOOM;
-        self.maximumZoomScale = MAX_ZOOM;
+        self.minimumZoomScale = kMinZoom;
+        self.maximumZoomScale = kMaxZoom;
     }
     return self;
 }
+
+- (void)imageViewModelWasUpdated:(ImageViewModel *)imageViewModel
+{
+    self.imageView.image = imageViewModel.image;
+    [self setupContentFrames];
+}
+
+#pragma mark - Layout
 
 /**
  * Initialize content size and imageView frame
  */
 - (void)setupContentFrames
 {
+    CGSize size = self.frame.size;
+    
+    // We're not ready to setup anything if this ScrollView hasn't been laid out according to the constraints
+    if (size.height == 0 && size.width == 0) {
+        return;
+    }
+    
     self.initialized = YES;
     
-    CGSize size = self.frame.size;
-    CGRect frame = self.imageView.frame;
+    CGRect frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
+    NSLog(@"%@", self.imageView.image);
     
     // Scale image to fit, preserving aspect ratio
     float scale = 1.0;
@@ -68,13 +71,11 @@
             scale = vScale;
         }
     }
-    frame.size.width = (CGFloat) frame.size.width * scale;
-    frame.size.height = (CGFloat) frame.size.height * scale;
+    frame.size.width = (CGFloat) frame.size.width * scale * self.viewModel.hZoom;
+    frame.size.height = (CGFloat) frame.size.height * scale * self.viewModel.vZoom;
     
     self.initialScale = scale;
     
-    frame.origin.x = 0;
-    frame.origin.y = 0;
     self.imageView.frame = frame;
     self.contentSize = frame.size;
 }
@@ -106,7 +107,25 @@
     self.imageView.frame = frame;
 }
 
-- (void)stretchHorizontallyTo:(float)hZoom
+#pragma mark - Zooming
+
+// kMaxZoom = 4.0
+// kMinZoom = 0.25
+//
+// This is what should be set on the sliders and displayed on the labels:
+// hZoom = zoomScale * hStretch
+// kMinZoom <= min(hZoom, vZoom)
+// max(hZoom, vZoom) <= kMaxZoom
+//
+// kMinZoom <= min(zoomScale * hStretch, zoomScale * vStretch)
+// kMinZoom <= zoomScale * hStretch
+// kMinZoom <= zoomScale * vStretch
+// kMinZoom/hStretch <= zoomScale
+// kMinZoom/vStretch <= zoomScale
+// MAX(kMinZoom/hStretch, kMinZoom/vStretch) <= zoomScale
+// same with kMaxZoom
+
+- (void)hZoomTo:(float)hZoom
 {
     CGRect frame = self.imageView.frame;
     frame.size.width = self.imageView.image.size.width * self.initialScale * hZoom;
@@ -117,7 +136,7 @@
     [self recalculateZoomScaleLimits];
 }
 
-- (void)stretchVerticallyTo:(float)vZoom
+- (void)vZoomTo:(float)vZoom
 {
     CGRect frame = self.imageView.frame;
     frame.size.height = self.imageView.image.size.height * self.initialScale * vZoom;
@@ -130,8 +149,8 @@
 
 - (void)recalculateZoomScaleLimits
 {
-    CGFloat min = MAX(MIN_ZOOM / self.viewModel.hStretch, MIN_ZOOM / self.viewModel.vStretch);
-    CGFloat max = MIN(MAX_ZOOM / self.viewModel.hStretch, MAX_ZOOM / self.viewModel.vStretch);
+    CGFloat min = MAX(kMinZoom / self.viewModel.hStretch, kMinZoom / self.viewModel.vStretch);
+    CGFloat max = MIN(kMaxZoom / self.viewModel.hStretch, kMaxZoom / self.viewModel.vStretch);
     if (min > max) {
         min = max;
     }
@@ -165,16 +184,22 @@
 }
 
 - (RACSignal *)rac_zoomSignal {
+    // NOTE: we don't really need use associated objects since we're not adding instances variables
+    // to a class that we don't control.
     RACSignal *signal = objc_getAssociatedObject(self, _cmd);
-    if (signal != nil) return signal;
-    signal = [[self rac_signalForSelector:@selector(scrollViewDidZoom:) fromProtocol:@protocol(UIScrollViewDelegate)] map:^id(RACTuple *tuple) {
-        return tuple.first;
-    }];
-    objc_setAssociatedObject(self, _cmd, signal, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    if (!signal) {
+        signal = [[self rac_signalForSelector:@selector(scrollViewDidZoom:) fromProtocol:@protocol(UIScrollViewDelegate)] map:^id(RACTuple *tuple) {
+            return tuple.first;
+        }];
+        objc_setAssociatedObject(self, _cmd, signal, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+    }
     
     // Set itself as delegate for zoom events
     // This function must be called *after* `-rac_signalForSelector:` is called.
     // This is a workaround, for the problem described at http://stackoverflow.com/a/22004639/161972
+    // and at https://github.com/ReactiveCocoa/ReactiveCocoa/pull/745
     self.delegate = self;
     
     return signal;

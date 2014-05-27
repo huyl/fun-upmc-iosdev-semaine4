@@ -8,12 +8,12 @@
 
 #import "ViewController.h"
 #import "MyView.h"
-#import "MyViewModel.h"
+#import "ViewModel.h"
 
 @interface ViewController ()
 
 @property (nonatomic, strong) MyView *mainView;
-@property (nonatomic, strong) MyViewModel *viewModel;
+@property (nonatomic, strong) ViewModel *viewModel;
 
 @end
 
@@ -24,18 +24,37 @@
     [super viewDidLoad];
     
     // Instantiate ViewModel
-    _viewModel = [[MyViewModel alloc] init];
+    _viewModel = [[ViewModel alloc] init];
 
     // Instantiate main View
     _mainView = [[MyView alloc] initWithFrame:[[UIScreen mainScreen] bounds] andViewModel:self.viewModel];
     self.mainView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [[self view] addSubview:self.mainView];
+    [self.view addSubview:self.mainView];
     
-    [self setupBindings];
+    [self setupRAC];
 }
 
-- (void)setupBindings
+- (void)setupRAC
 {
+    @weakify(self);
+    
+    // ScrollView reacts to changing current image in ViewModel
+    // NOTE: we skip 1 because the first imageViewModel is nil
+    [[RACObserve(self, viewModel.currentImageViewModel) skip:1] subscribeNext:^(ImageViewModel *imageViewModel) {
+        [self.mainView.scrollView imageViewModelWasUpdated:imageViewModel];
+    }];
+    // Label reacts to changing current image in ViewModel
+    // NOTE: we skip 1 because the first imageViewModel is nil
+    RAC(self.mainView.imageLabel, text) = RACObserve(self, viewModel.currentImageViewModel.filename);
+    
+    // ViewModel current image reacts to changes in Stepper
+    RAC(self.viewModel, currentImageIndex) = RACObserve(self, mainView.imageStepper.value);
+    // Stepper reacts to ViewModel image count (should only happen once)
+    RAC(self.mainView.imageStepper, maximumValue) =
+        [RACObserve(self, viewModel.imageCount) map:^NSNumber *(NSNumber *i) {
+            return @(i.intValue - 1);
+        }];
+    
     // Set up bidirectional binding between viewModel and hSlider value
     // See https://github.com/ReactiveCocoa/ReactiveCocoa/issues/1178
     RACChannelTerminal *hSliderFTerminal = RACChannelTo(self, viewModel.hZoom);
@@ -49,8 +68,6 @@
     [vSliderFTerminal subscribe:vSliderLTerminal];
     [vSliderLTerminal subscribe:vSliderFTerminal];
     
-    @weakify(self);
-    
     // Labels react to changing zoom levels from viewModel
     RAC(self.mainView.hLabel, text) = [RACObserve(self, viewModel.hZoom) map:^(NSNumber *hZoom) {
         return [NSString stringWithFormat:@"Largeur : %0.2gx", hZoom.floatValue];
@@ -61,11 +78,11 @@
     // Scrollview reacts to changing zoom levels from viewModel
     [[RACObserve(self, viewModel.hZoom) skip:1] subscribeNext:^(NSNumber *hZoom) {
         @strongify(self);
-        [self.mainView.scrollView stretchHorizontallyTo:hZoom.floatValue];
+        [self.mainView.scrollView hZoomTo:hZoom.floatValue];
     }];
     [[RACObserve(self, viewModel.vZoom) skip:1] subscribeNext:^(NSNumber *vZoom) {
         @strongify(self);
-        [self.mainView.scrollView stretchVerticallyTo:vZoom.floatValue];
+        [self.mainView.scrollView vZoomTo:vZoom.floatValue];
     }];
     
     // ViewModel reacts to changing zoom levels from UIScrollView

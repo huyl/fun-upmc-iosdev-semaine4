@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MyViewModel.h"
+#import "ViewModel.h"
+#import "ImageViewModel.h"
 
-#define MAX_ZOOM ((CGFloat)4.0)
-#define MIN_ZOOM ((CGFloat)0.25)
+extern const CGFloat kMaxZoom;
+extern const CGFloat kMinZoom;
+
 
 /**
  * Subclasses UIScrollView because we need to have layoutSubviews in order to give UIImageView an initial size.
@@ -23,11 +25,13 @@
  */
 @interface MyScrollView : UIScrollView
 
-- (id)initWithImageView:(UIImageView*)imageView andViewModel:(MyViewModel*)viewModel;
-- (RACSignal *)rac_zoomSignal;
+- (id)initWithImageView:(UIImageView*)imageView andViewModel:(ViewModel*)viewModel;
 
-- (void)stretchHorizontallyTo:(float)hZoom;
-- (void)stretchVerticallyTo:(float)hZoom;
+- (void)imageViewModelWasUpdated:(ImageViewModel *)imageViewModel;
+
+- (void)hZoomTo:(float)hZoom;
+- (void)vZoomTo:(float)hZoom;
 - (void)updateZoomValuesWithScale:(float)zoomScale;
 
+- (RACSignal *)rac_zoomSignal;
 @end

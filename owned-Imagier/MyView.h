@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MyViewModel.h"
+#import "ViewModel.h"
 #import "MyScrollView.h"
 
 
@@ -25,6 +25,6 @@
 @property (nonatomic, weak) UISlider *hSlider;
 @property (nonatomic, weak) UISlider *vSlider;
 
-- (id)initWithFrame:(CGRect)frame andViewModel:(MyViewModel*)viewModel;
+- (id)initWithFrame:(CGRect)frame andViewModel:(ViewModel*)viewModel;
 
 @end

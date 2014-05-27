@@ -16,4 +16,6 @@
 
     #import "ReactiveCocoa/ReactiveCocoa.h"
     #import "ReactiveCocoa/EXTScope.h"
+
+    #import "Constants.h"
 #endif
