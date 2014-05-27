@@ -60,8 +60,8 @@
     self.vStretchSubject = [RACSubject subject];
     RAC(self, hZoom) = [[self.hZoomSubject switchToLatest] distinctUntilChanged];
     RAC(self, vZoom) = [[self.vZoomSubject switchToLatest] distinctUntilChanged];
-    RAC(self, hStretch) = [[self.vStretchSubject switchToLatest] distinctUntilChanged];
-    RAC(self, vStretch) = [[self.hStretchSubject switchToLatest] distinctUntilChanged];
+    RAC(self, hStretch) = [[self.hStretchSubject switchToLatest] distinctUntilChanged];
+    RAC(self, vStretch) = [[self.vStretchSubject switchToLatest] distinctUntilChanged];
     
     // We want to send the signals to the right imageViewModels
     // TODO: Is there a simpler way to do this, like switchToLatest but in the other direction?
