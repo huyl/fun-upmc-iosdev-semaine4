@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		E49276DAF02443EA90BA5187 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A607EEED2634A198C896BEB /* libPods.a */; };
 		E5335AD31931D9F6002728D0 /* MyScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = E5335AD21931D9F6002728D0 /* MyScrollView.m */; };
-		E5C02EDD19313FEC002C0911 /* MyViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C02EDC19313FEC002C0911 /* MyViewModel.m */; };
+		E5ACDF6819344F89004E9154 /* ImageViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5ACDF6719344F89004E9154 /* ImageViewModel.m */; };
+		E5ACDF6B193456A6004E9154 /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = E5ACDF6A193456A6004E9154 /* Constants.m */; };
+		E5C02EDD19313FEC002C0911 /* ViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E5C02EDC19313FEC002C0911 /* ViewModel.m */; };
 		E5C02EF919315C6A002C0911 /* libReactiveCocoa-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C02EF819315C6A002C0911 /* libReactiveCocoa-iOS.a */; };
 		E5C02F40193183A7002C0911 /* fond-1024x1024.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E5C02F29193183A7002C0911 /* fond-1024x1024.jpg */; };
 		E5C02F41193183A7002C0911 /* fond-1136x1136.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E5C02F2A193183A7002C0911 /* fond-1136x1136.jpg */; };
@@ -68,8 +70,12 @@
 		4913EA5CB2764AEF8948ED8E /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		E5335AD11931D9F6002728D0 /* MyScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyScrollView.h; sourceTree = "<group>"; };
 		E5335AD21931D9F6002728D0 /* MyScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyScrollView.m; sourceTree = "<group>"; };
-		E5C02EDB19313FEC002C0911 /* MyViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyViewModel.h; sourceTree = "<group>"; };
-		E5C02EDC19313FEC002C0911 /* MyViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyViewModel.m; sourceTree = "<group>"; };
+		E5ACDF6619344F89004E9154 /* ImageViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewModel.h; sourceTree = "<group>"; };
+		E5ACDF6719344F89004E9154 /* ImageViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewModel.m; sourceTree = "<group>"; };
+		E5ACDF69193456A6004E9154 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		E5ACDF6A193456A6004E9154 /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		E5C02EDB19313FEC002C0911 /* ViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewModel.h; sourceTree = "<group>"; };
+		E5C02EDC19313FEC002C0911 /* ViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewModel.m; sourceTree = "<group>"; };
 		E5C02EF819315C6A002C0911 /* libReactiveCocoa-iOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libReactiveCocoa-iOS.a"; path = "external/ReactiveCocoa/ReactiveCocoaFramework/build/Debug-iphoneos/libReactiveCocoa-iOS.a"; sourceTree = "<group>"; };
 		E5C02F29193183A7002C0911 /* fond-1024x1024.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "fond-1024x1024.jpg"; sourceTree = "<group>"; };
 		E5C02F2A193183A7002C0911 /* fond-1136x1136.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "fond-1136x1136.jpg"; sourceTree = "<group>"; };
@@ -212,19 +218,24 @@
 		E5D79977193032960062AE98 /* owned-Imagier */ = {
 			isa = PBXGroup;
 			children = (
+				E5ACDF69193456A6004E9154 /* Constants.h */,
+				E5ACDF6A193456A6004E9154 /* Constants.m */,
 				E5D79980193032960062AE98 /* AppDelegate.h */,
 				E5D79981193032960062AE98 /* AppDelegate.m */,
 				E5D79983193032960062AE98 /* Main_iPhone.storyboard */,
 				E5D79986193032960062AE98 /* Main_iPad.storyboard */,
 				E5D79989193032960062AE98 /* ViewController.h */,
 				E5D7998A193032960062AE98 /* ViewController.m */,
-				E5C02EDB19313FEC002C0911 /* MyViewModel.h */,
-				E5C02EDC19313FEC002C0911 /* MyViewModel.m */,
 				E5D799AA193032DE0062AE98 /* MyView.h */,
 				E5D799AB193032DE0062AE98 /* MyView.m */,
 				E5335AD11931D9F6002728D0 /* MyScrollView.h */,
 				E5335AD21931D9F6002728D0 /* MyScrollView.m */,
+				E5C02EDB19313FEC002C0911 /* ViewModel.h */,
+				E5C02EDC19313FEC002C0911 /* ViewModel.m */,
+				E5ACDF6619344F89004E9154 /* ImageViewModel.h */,
+				E5ACDF6719344F89004E9154 /* ImageViewModel.m */,
 				E5D7998C193032960062AE98 /* Images.xcassets */,
+				E5C02F28193183A7002C0911 /* images */,
 				E5D79978193032960062AE98 /* Supporting Files */,
 			);
 			path = "owned-Imagier";
@@ -233,7 +244,6 @@
 		E5D79978193032960062AE98 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				E5C02F28193183A7002C0911 /* images */,
 				E5D79979193032960062AE98 /* owned-Imagier-Info.plist */,
 				E5D7997A193032960062AE98 /* InfoPlist.strings */,
 				E5D7997D193032960062AE98 /* main.m */,
@@ -432,7 +442,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5D799AC193032DE0062AE98 /* MyView.m in Sources */,
-				E5C02EDD19313FEC002C0911 /* MyViewModel.m in Sources */,
+				E5C02EDD19313FEC002C0911 /* ViewModel.m in Sources */,
+				E5ACDF6819344F89004E9154 /* ImageViewModel.m in Sources */,
+				E5ACDF6B193456A6004E9154 /* Constants.m in Sources */,
 				E5D7998B193032960062AE98 /* ViewController.m in Sources */,
 				E5D79982193032960062AE98 /* AppDelegate.m in Sources */,
 				E5D7997E193032960062AE98 /* main.m in Sources */,

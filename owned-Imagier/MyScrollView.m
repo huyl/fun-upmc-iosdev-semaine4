@@ -7,7 +7,6 @@
 //
 
 #import "MyScrollView.h"
-#import <objc/objc-runtime.h>
 
 const CGFloat kMaxZoom = 4.0;
 const CGFloat kMinZoom = 0.25;
@@ -17,6 +16,8 @@ const CGFloat kMinZoom = 0.25;
 @property (nonatomic, weak) UIImageView* imageView;
 @property (nonatomic, weak) ViewModel* viewModel;
 @property (nonatomic) float initialScale;
+
+@property (nonatomic, strong) RACSignal *zoomSignal;
 @end
 
 
@@ -58,7 +59,6 @@ const CGFloat kMinZoom = 0.25;
     self.initialized = YES;
     
     CGRect frame = CGRectMake(0, 0, self.imageView.image.size.width, self.imageView.image.size.height);
-    NSLog(@"%@", self.imageView.image);
     
     // Scale image to fit, preserving aspect ratio
     float scale = 1.0;
@@ -87,7 +87,7 @@ const CGFloat kMinZoom = 0.25;
         [self setupContentFrames];
     }
     
-    // Re-center image if it's too small
+    /// Re-center image if it's too small
     
     // FIXME: probably should just start from the image size rather than the imageView.frame
     CGSize size = self.frame.size;
@@ -184,16 +184,10 @@ const CGFloat kMinZoom = 0.25;
 }
 
 - (RACSignal *)rac_zoomSignal {
-    // NOTE: we don't really need use associated objects since we're not adding instances variables
-    // to a class that we don't control.
-    RACSignal *signal = objc_getAssociatedObject(self, _cmd);
-    
-    if (!signal) {
-        signal = [[self rac_signalForSelector:@selector(scrollViewDidZoom:) fromProtocol:@protocol(UIScrollViewDelegate)] map:^id(RACTuple *tuple) {
+    if (!self.zoomSignal) {
+        self.zoomSignal = [[self rac_signalForSelector:@selector(scrollViewDidZoom:) fromProtocol:@protocol(UIScrollViewDelegate)] map:^id(RACTuple *tuple) {
             return tuple.first;
         }];
-        objc_setAssociatedObject(self, _cmd, signal, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-        
     }
     
     // Set itself as delegate for zoom events
@@ -202,7 +196,7 @@ const CGFloat kMinZoom = 0.25;
     // and at https://github.com/ReactiveCocoa/ReactiveCocoa/pull/745
     self.delegate = self;
     
-    return signal;
+    return self.zoomSignal;
 }
 
 

@@ -29,15 +29,13 @@
 {
     if (!self.image) {
         self.image = [UIImage imageNamed:self.filename];
-    } else {
-        NSLog(@"reusing");
     }
-    NSLog(@"my hzoom %f", self.hZoom);
 }
 
 - (void)deactivate
 {
-    // To reduce memory usage, we unload the image
+    // To reduce memory usage, we unload the image.
+    // NOTE: `+imageNamed` may still cache the image so the memory won't go down immediately
     self.image = nil;
 }
 
