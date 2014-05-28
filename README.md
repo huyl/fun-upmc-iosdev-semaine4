@@ -17,9 +17,10 @@ Plateforme de MOOC: [FUN](https://www.france-universite-numerique-mooc.fr/)
 Techniques
 ----------
 
+- Organisation Model-View-ViewModel (MVVM)
 - ReactiveCocoa : pour UI binding et le remplacement des delegates et KVO
   - Pour ça, on est obligé à utiliser ARC
 - Masonry : pour créer facilement les contraintes pour Auto-Layout
+- cocoapods : pour gérer les paquets comme Masonry
 - Effet parallaxe
-- Organisation Model-View-ViewModel (MVVM)
 - L'interface est construise programmatiquement; pas de Storyboard / Interface Builder
