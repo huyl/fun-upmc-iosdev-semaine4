@@ -86,7 +86,7 @@
     [[RACObserve(self, vStretch) distinctUntilChanged] subscribeNext:^(NSNumber *vStretch) {
         @strongify(self);
         if (self.currentImageViewModel) {
-            self.currentImageViewModel.hStretch = vStretch.floatValue;
+            self.currentImageViewModel.vStretch = vStretch.floatValue;
         }
     }];
 }
