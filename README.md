@@ -28,7 +28,9 @@ Structure :
 
 - Organisation [Model-View-ViewModel
   (MVVM)](http://www.teehanlax.com/blog/model-view-viewmodel-for-ios/)
+- Style [Functional Reactive Programming](http://en.wikipedia.org/wiki/Functional_reactive_programming)
 - L'interface est construise programmatiquement; pas de Storyboard / Interface Builder
+- Auto-Layout
 - ARC, à cause de ReactiveCocoa et presque [tout le
   monde](http://google-styleguide.googlecode.com/svn/trunk/objcguide.xml?showone=Automatic_Reference_Counting__ARC_#Automatic_Reference_Counting__ARC_) l'utilise.
 - Notation pointée (dot notation), parce que c'est idiomatique (comme l'explique
@@ -39,7 +41,7 @@ Structure :
 Librairies :
 
 - [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) :
-pour UI binding et le remplacement des delegates et KVO
+pour UI binding et le style Functional Reactive Programming
     - Pour ça, on est obligé à utiliser ARC
 - [Masonry](https://github.com/cloudkite/Masonry) :
 pour créer facilement les contraintes pour Auto-Layout
