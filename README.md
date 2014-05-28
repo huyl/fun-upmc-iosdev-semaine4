@@ -34,15 +34,13 @@ Structure :
 - Notation pointée (dot notation), parce que c'est idiomatique (comme l'explique
   [Google](http://google-styleguide.googlecode.com/svn/trunk/objcguide.xml?showone=Properties#Properties) et 
   [NY
-  Times](https://github.com/NYTimes/objective-c-style-guide#dot-notation-syntax)
+  Times](https://github.com/NYTimes/objective-c-style-guide#dot-notation-syntax))
 
 Librairies :
 
 - [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) :
 pour UI binding et le remplacement des delegates et KVO
-
     - Pour ça, on est obligé à utiliser ARC
-
 - [Masonry](https://github.com/cloudkite/Masonry) :
 pour créer facilement les contraintes pour Auto-Layout
 - [cocoapods](http://cocoapods.org/) : pour gérer les paquets comme Masonry
