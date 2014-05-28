@@ -32,6 +32,24 @@ const CGFloat kMinZoom = 0.25;
         self.initialized = NO;
         self.minimumZoomScale = kMinZoom;
         self.maximumZoomScale = kMaxZoom;
+        
+        // Add parallax effect
+        
+        UIInterpolatingMotionEffect *verticalMotionEffect =
+            [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.y"
+                                                            type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+        verticalMotionEffect.minimumRelativeValue = @(50);
+        verticalMotionEffect.maximumRelativeValue = @(-50);
+        
+        UIInterpolatingMotionEffect *horizontalMotionEffect =
+            [[UIInterpolatingMotionEffect alloc] initWithKeyPath:@"center.x"
+                                                            type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+        horizontalMotionEffect.minimumRelativeValue = @(50);
+        horizontalMotionEffect.maximumRelativeValue = @(-50);
+        
+        UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+        group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+        [self.imageView addMotionEffect:group];
     }
     return self;
 }
