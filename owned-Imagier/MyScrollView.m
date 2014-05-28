@@ -127,21 +127,75 @@ const CGFloat kMinZoom = 0.25;
 
 #pragma mark - Zooming
 
-// kMaxZoom = 4.0
-// kMinZoom = 0.25
-//
-// This is what should be set on the sliders and displayed on the labels:
-// hZoom = zoomScale * hStretch
-// kMinZoom <= min(hZoom, vZoom)
-// max(hZoom, vZoom) <= kMaxZoom
-//
-// kMinZoom <= min(zoomScale * hStretch, zoomScale * vStretch)
-// kMinZoom <= zoomScale * hStretch
-// kMinZoom <= zoomScale * vStretch
-// kMinZoom/hStretch <= zoomScale
-// kMinZoom/vStretch <= zoomScale
-// MAX(kMinZoom/hStretch, kMinZoom/vStretch) <= zoomScale
-// same with kMaxZoom
+/*
+ DESIGN OF THE ZOOMING: PINCH * SLIDER STRETCHES
+ 
+ Alors, pour que l'utilisateur puisse aller du pinch au slider et retourner au pinch, etc., sans détruire les chosse, il faut des mathes malheureusement.
+ 
+ Concepts
+ --------
+ 
+ Basically, you have to distinguish several notions.  First:
+ 
+ - The Image size, which is fixed and never changes
+ - The ImageView frame, which is affected by the sliders and the pinch
+ - The ScrollView's frame, which only changes when rotating the device
+ 
+ Second, there are two ways to visually change the size of an image: (1) you pinch in the scrollview, which can only be done in both dimensions *simultaneously*, and (2) you change the size of the ImageView, which can be done in the horizontal and vertical dimensions separately with the sliders.  When you *combine* these two scaling effects, you get the user's perceived zoom levels; this combination is done by *multiplication*.
+ 
+ So that means, that these are all different:
+ 
+ - The ScrollView's `zoomScale`, which is dictated by the pinch
+ - The separate horizontal and vertical stretches of the image, which are affected by the sliders, but which are not equal numerically to the values of the sliders and labels!
+ - And most importantly, the separate horizontal and vertical *zoom* that the user perceives.  These zoom levels are what limits the sliders and what are displayed on the labels.
+ 
+ These perceptual zoom levels are not the same things as the ScrollView's `zoomScale` and the one-dimensional stretches of the image! The sliders' values do not equal the horizontal and vertical stretches.  The slider's values are not saved in variables.  It's the stretches that are stored in your image's instance variables and used in the formulas below to change the ImageView's frame.
+ 
+ The Setup
+ ---------
+ 
+ When we first display the image, we want the entire image to be visible and scaled to fit the screen; so either the height or width of the ImageView matches the ScrollView's, without the other dimension being greater than the ScrollView's.  From the user's point of view, let's define 1x as this default perceptual zoom level of the image.  By the way, this initial scaling, once computed as described, should be saved for every image, as it is used for the formulas below.
+ 
+ Now we define that the minimum perceptual zoom level in either dimension should be 0.25x and the maximum should be 4x.  This is the counter-intuitive part: even though the sliders affect the horizontal and vertical stretches of the ImageView, the numerical values of the sliders are not equal to the internet stretches, as you'll see below.
+ 
+ Formula
+ -------
+ 
+ The perceptual zoom levels are equal to:
+ 
+ hZoom = zoomScale * hStretch
+ vZoom = zoomScale * vStretch
+ 
+ Given constants:
+ 
+ kMaxZoom = 4.0
+ kMinZoom = 0.25
+ 
+ Then, the perceptual zooms level are constrained by:
+ 
+ kMinZoom <= min(hZoom, vZoom)
+ max(hZoom, vZoom) <= kMaxZoom
+ 
+ Doing some math, you then get:
+ 
+ kMinZoom <= min(zoomScale * hStretch, zoomScale * vStretch)
+ kMinZoom <= zoomScale * hStretch
+ kMinZoom <= zoomScale * vStretch
+ kMinZoom / hStretch <= zoomScale
+ kMinZoom / vStretch <= zoomScale
+ 
+ So:
+ 
+ MAX(kMinZoom / hStretch, kMinZoom / vStretch) <= zoomScale
+ 
+ Similarly with `kMaxZoom`.
+ 
+ This is the key result.  We must change the ScrollView's `minimumZoomScale` and `maximumZoomScale` in real time, whenever the sliders change the horizontal and vertical stretches!
+ 
+ You'll see that you can switch back and forth between the pinch and the sliders, no matter what values they are.  And it will make sense to the user.
+ */
+ 
+
 
 - (void)hZoomTo:(float)hZoom
 {
