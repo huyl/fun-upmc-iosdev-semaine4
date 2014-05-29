@@ -14,8 +14,16 @@ Plateforme de MOOC: [FUN](https://www.france-universite-numerique-mooc.fr/)
 
 ![Screen capture](ImagierScreencap.gif)
 
-Pour compiler, il faut ouvrir le fichier `owned-Imagier.xcworkspace/`, pas
+Compilation
+-----------
+
+Pour compiler:
+
+- Il faut ouvrir le fichier `owned-Imagier.xcworkspace/`, pas
 le project `owned-Imagier.xcodeproj/`.
+-  Il faut être sûr de bien sélectionner le projet `owned-Imagier` en haut de
+   la fenêtre avant de compiler, parce que le défaut c'est de seulement compiler
+   ReactiveCocoa (Je sais pas pourquoi).
 
 Techniques
 ----------
