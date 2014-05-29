@@ -14,6 +14,9 @@ Plateforme de MOOC: [FUN](https://www.france-universite-numerique-mooc.fr/)
 
 ![Screen capture](ImagierScreencap.gif)
 
+Pour compiler, il faut ouvrir le fichier `owned-Imagier.xcworkspace/`, pas
+le project `owned-Imagier.xcodeproj/`.
+
 Techniques
 ----------
 
