@@ -30,16 +30,21 @@ Techniques
 
 Fonctionnalité :
 
+- ScrollView & ImageView
+  - Effet parallaxe
+- Calcul mathématique pour la relation entre le pinch et les sliders
 - Universelle
 - Rotation
-- Effet parallaxe
-- Calcul mathématique pour la relation entre le pinch et les sliders
 
 Structure :
 
 - Organisation [Model-View-ViewModel
   (MVVM)](http://www.teehanlax.com/blog/model-view-viewmodel-for-ios/)
-- Style [Functional Reactive Programming](http://en.wikipedia.org/wiki/Functional_reactive_programming)
+- Style [Functional Reactive Programming](http://en.wikipedia.org/wiki/Functional_reactive_programming) au travers de ReactiveCocoa
+  - Highlight: bidirectional bindings between control value and viewModel
+    value, using RACChannelTo
+  - Highlight: multiple controls kept in sync (labels, slider, UIImageView, ScrollView zoom)
+  - Highlight: signal of signals, although probably not necessary
 - L'interface est construise programmatiquement; pas de Storyboard / Interface Builder
 - Auto-Layout
 - ARC, à cause de ReactiveCocoa et presque [tout le
