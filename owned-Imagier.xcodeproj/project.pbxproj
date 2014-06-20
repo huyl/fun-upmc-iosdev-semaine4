@@ -432,7 +432,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/Users/huy/opt/iosdev-jailbreak/xcode-build-phase-run-script.sh";
+			shellScript = "/Users/huy/opt/iosdev/xcode-build-phase-run-script.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
